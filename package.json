@@ -1,0 +1,10 @@
+{
+  "name": "jotvault",
+  "private": true,
+  "author": "Michael Milawski <mm@millsoft.de>",
+  "license": "MIT",
+	"workspaces": [
+    "frontend",
+    "api"
+  ]
+}
