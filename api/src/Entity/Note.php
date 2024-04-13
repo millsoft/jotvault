@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\NoteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use SpecShaper\EncryptBundle\Annotations\Encrypted;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 
@@ -24,6 +25,7 @@ class Note
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Encrypted]
     private ?string $content = null;
 
     #[ORM\Column]
