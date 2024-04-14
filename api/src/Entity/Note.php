@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
 #[ApiResource]
-class Note
+class Note implements IEncryptedNote
 {
 
     #[ORM\Id]
@@ -31,6 +31,17 @@ class Note
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    private ?string $encryptionKey = null;
+
+    public function getEncryptionKey(): ?string
+    {
+        return $this->encryptionKey;
+    }
+
+    public function setEncryptionKey(?string $encryptionKey): void
+    {
+        $this->encryptionKey = $encryptionKey;
+    }
 
     public function getId(): ?Uuid
     {
@@ -70,6 +81,11 @@ class Note
     {
         $this->createdAt = $createdAt;
 
+        return $this;
+    }
+
+    public function setKey(string $key): static
+    {
         return $this;
     }
 

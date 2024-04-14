@@ -48,3 +48,6 @@ services:
     SpecShaper\EncryptBundle\Command\GenKeyCommand:
         tags:
             -  { name: console.command }
+    SpecShaper\EncryptBundle\Command\GenKeyCommandSalted:
+        tags:
+            -  { name: console.command }
