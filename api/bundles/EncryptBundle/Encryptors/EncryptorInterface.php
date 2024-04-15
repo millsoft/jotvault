@@ -7,7 +7,23 @@ namespace SpecShaper\EncryptBundle\Encryptors;
  */
 interface EncryptorInterface
 {
+    /**
+     * Base secret key.
+     *
+     * @param string $key
+     *
+     * @return void
+     */
     public function setSecretKey(string $key): void;
+
+    /**
+     * salt key, will be mixed with the secret key.
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function setSalt(string $key): void;
 
     /**
      * Must accept data and return encrypted data.

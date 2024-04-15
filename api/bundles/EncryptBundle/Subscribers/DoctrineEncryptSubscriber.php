@@ -141,11 +141,6 @@ class DoctrineEncryptSubscriber implements EventSubscriberInterface, DoctrineEnc
         return $encryptedFields;
     }
 
-    private function getEncryptedKey(IEncryptedNote $entity) : string {
-        //TODO: get the current key and append the user key here, for now we return the user key only
-        return $entity->getEncryptionKey();
-    }
-
     /**
      * Process (encrypt/decrypt) entities fields.
      */
@@ -159,7 +154,8 @@ class DoctrineEncryptSubscriber implements EventSubscriberInterface, DoctrineEnc
             return false;
         }
 
-        $this->encryptor->setSecretKey($this->getEncryptedKey($entity));
+        //TODO: set the salt in different way, for now it is hardcoded
+        $this->encryptor->setSalt("helloooo");
 
         $unitOfWork = $em->getUnitOfWork();
         $oid = spl_object_id($entity);
