@@ -2,6 +2,7 @@
 
 namespace SpecShaper\EncryptBundle\Encryptors;
 
+use App\Services\EncryptionKeyManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EncryptorFactory
@@ -9,9 +10,11 @@ class EncryptorFactory
     public const SUPPORTED_EXTENSION_OPENSSL = OpenSslEncryptor::class;
 
     private EventDispatcherInterface $dispatcher;
+    private EncryptionKeyManager $encryptionKeyManager;
 
-    public function __construct(EventDispatcherInterface $dispatcher)
+    public function __construct(EventDispatcherInterface $dispatcher, EncryptionKeyManager $encryptionKeyManager)
     {
+        $this->encryptionKeyManager = $encryptionKeyManager;
         $this->dispatcher = $dispatcher;
     }
 
@@ -23,7 +26,7 @@ class EncryptorFactory
      */
     public function createService(string $encryptKey, ?string $encryptorClass = self::SUPPORTED_EXTENSION_OPENSSL): EncryptorInterface
     {
-        $encryptor = new $encryptorClass($this->dispatcher);
+        $encryptor = new $encryptorClass($this->dispatcher, $this->encryptionKeyManager);
         $encryptor->setSecretKey($encryptKey);
         return $encryptor;
     }

@@ -2,6 +2,7 @@
 
 namespace SpecShaper\EncryptBundle\Encryptors;
 
+use App\Services\EncryptionKeyManager;
 use SpecShaper\EncryptBundle\Event\EncryptKeyEvent;
 use SpecShaper\EncryptBundle\Event\EncryptKeyEvents;
 use SpecShaper\EncryptBundle\Exception\EncryptException;
@@ -26,15 +27,16 @@ class OpenSslEncryptor implements EncryptorInterface
     /**
      * Dynamic salt value.
      */
-    private string $salt;
+    private ?string $salt;
 
     private EventDispatcherInterface $dispatcher;
 
     /**
      * OpenSslEncryptor constructor.
      */
-    public function __construct(EventDispatcherInterface $dispatcher)
+    public function __construct(EventDispatcherInterface $dispatcher, EncryptionKeyManager $encryptionKeyManager)
     {
+        $this->setSalt($encryptionKeyManager->getKey());
         $this->dispatcher = $dispatcher;
     }
 
@@ -159,17 +161,17 @@ class OpenSslEncryptor implements EncryptorInterface
         return $key;
     }
 
-    public function getSalt(): string
+    public function getSalt(): ?string
     {
         return $this->salt;
     }
 
-    public function setSalt(string $salt): void
+    public function setSalt(?string $salt): void
     {
         $this->salt = $salt;
     }
 
-    private function getSaltedKey(): string
+    private function getSaltedKey(): ?string
     {
         return hash_pbkdf2("sha256", $this->getSecretKey(), $this->getSalt(), 1000, 32, true);
     }

@@ -44,7 +44,7 @@ class DoctrineEncryptSubscriber implements EventSubscriberInterface, DoctrineEnc
         private readonly LoggerInterface $logger,
         private readonly EncryptorInterface $encryptor,
         array $annotationArray,
-        bool $isDisabled
+        bool $isDisabled,
     ) {
         $this->annotationArray = $annotationArray;
         $this->isDisabled = $isDisabled;
@@ -143,8 +143,16 @@ class DoctrineEncryptSubscriber implements EventSubscriberInterface, DoctrineEnc
 
     /**
      * Process (encrypt/decrypt) entities fields.
+     *
+     * @param IEncryptedNote         $entity
+     * @param EntityManagerInterface $em
+     * @param bool                   $isEncryptOperation
+     * @param bool                   $isInsert
+     *
+     * @return bool
+     * @throws EncryptException
      */
-    protected function processFields(object $entity, EntityManagerInterface $em, bool $isEncryptOperation, bool $isInsert): bool
+    protected function processFields(IEncryptedNote $entity, EntityManagerInterface $em, bool $isEncryptOperation, bool $isInsert): bool
     {
         // Get the encrypted properties in the entity.
         $properties = $this->getEncryptedFields($entity, $em);
@@ -153,9 +161,6 @@ class DoctrineEncryptSubscriber implements EventSubscriberInterface, DoctrineEnc
         if (empty($properties)) {
             return false;
         }
-
-        //TODO: set the salt in different way, for now it is hardcoded
-        $this->encryptor->setSalt("helloooo");
 
         $unitOfWork = $em->getUnitOfWork();
         $oid = spl_object_id($entity);

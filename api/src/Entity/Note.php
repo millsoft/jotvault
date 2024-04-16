@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Controller\NoteController;
 use App\Repository\NoteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -30,18 +31,6 @@ class Note implements IEncryptedNote
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
-
-    private ?string $encryptionKey = null;
-
-    public function getEncryptionKey(): ?string
-    {
-        return $this->encryptionKey;
-    }
-
-    public function setEncryptionKey(?string $encryptionKey): void
-    {
-        $this->encryptionKey = $encryptionKey;
-    }
 
     public function getId(): ?Uuid
     {
@@ -81,11 +70,6 @@ class Note implements IEncryptedNote
     {
         $this->createdAt = $createdAt;
 
-        return $this;
-    }
-
-    public function setKey(string $key): static
-    {
         return $this;
     }
 
