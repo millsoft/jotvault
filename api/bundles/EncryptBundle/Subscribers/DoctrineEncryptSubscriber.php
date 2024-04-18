@@ -2,7 +2,6 @@
 
 namespace SpecShaper\EncryptBundle\Subscribers;
 
-use App\Entity\IEncryptedNote;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -144,7 +143,7 @@ class DoctrineEncryptSubscriber implements EventSubscriberInterface, DoctrineEnc
     /**
      * Process (encrypt/decrypt) entities fields.
      *
-     * @param IEncryptedNote         $entity
+     * @param object                 $entity
      * @param EntityManagerInterface $em
      * @param bool                   $isEncryptOperation
      * @param bool                   $isInsert
@@ -152,7 +151,7 @@ class DoctrineEncryptSubscriber implements EventSubscriberInterface, DoctrineEnc
      * @return bool
      * @throws EncryptException
      */
-    protected function processFields(IEncryptedNote $entity, EntityManagerInterface $em, bool $isEncryptOperation, bool $isInsert): bool
+    protected function processFields(object $entity, EntityManagerInterface $em, bool $isEncryptOperation, bool $isInsert): bool
     {
         // Get the encrypted properties in the entity.
         $properties = $this->getEncryptedFields($entity, $em);
