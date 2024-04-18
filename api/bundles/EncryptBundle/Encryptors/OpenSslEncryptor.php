@@ -2,6 +2,7 @@
 
 namespace SpecShaper\EncryptBundle\Encryptors;
 
+use App\Services\EncryptionKeyManager;
 use SpecShaper\EncryptBundle\Event\EncryptKeyEvent;
 use SpecShaper\EncryptBundle\Event\EncryptKeyEvents;
 use SpecShaper\EncryptBundle\Exception\EncryptException;
@@ -12,6 +13,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * Class for OpenSSL encryption.
  *
  * @author Mark Ogilvie <mark.ogilvie@ogilvieconsulting.net>
+ * @author Michael Milawski <mm@millsoft.de>
  */
 class OpenSslEncryptor implements EncryptorInterface
 {
@@ -22,13 +24,19 @@ class OpenSslEncryptor implements EncryptorInterface
      */
     private string $secretKey;
 
+    /**
+     * Dynamic salt value.
+     */
+    private ?string $salt;
+
     private EventDispatcherInterface $dispatcher;
 
     /**
      * OpenSslEncryptor constructor.
      */
-    public function __construct(EventDispatcherInterface $dispatcher)
+    public function __construct(EventDispatcherInterface $dispatcher, EncryptionKeyManager $encryptionKeyManager)
     {
+        $this->setSalt($encryptionKeyManager->getKey());
         $this->dispatcher = $dispatcher;
     }
 
@@ -57,7 +65,7 @@ class OpenSslEncryptor implements EncryptorInterface
             return $data;
         }
 
-        $key = $this->getSecretKey();
+        $key = $this->getSaltedKey();
 
         // Create a cipher of the appropriate length for this method.
         $ivsize = openssl_cipher_iv_length(self::METHOD);
@@ -98,7 +106,7 @@ class OpenSslEncryptor implements EncryptorInterface
             return $data;
         }
 
-        $key = $this->getSecretKey();
+        $key = $this->getSaltedKey();
 
         $data = base64_decode($data);
 
@@ -123,7 +131,7 @@ class OpenSslEncryptor implements EncryptorInterface
      *
      * @throws \Exception
      */
-    private function getSecretKey(): string
+    protected function getSecretKey(): string
     {
         // Throw an event to allow encryption keys to be defined during runtime.
         $getKeyEvent = new EncryptKeyEvent();
@@ -151,5 +159,20 @@ class OpenSslEncryptor implements EncryptorInterface
         }
 
         return $key;
+    }
+
+    public function getSalt(): ?string
+    {
+        return $this->salt;
+    }
+
+    public function setSalt(?string $salt): void
+    {
+        $this->salt = $salt;
+    }
+
+    private function getSaltedKey(): ?string
+    {
+        return hash_pbkdf2("sha256", $this->getSecretKey(), $this->getSalt(), 1000, 32, true);
     }
 }

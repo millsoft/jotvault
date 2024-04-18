@@ -48,3 +48,10 @@ services:
     SpecShaper\EncryptBundle\Command\GenKeyCommand:
         tags:
             -  { name: console.command }
+
+    # Middlware to set the encryption key from the request header
+    App\EventListener\RequestListener:
+        arguments:
+            $encryptionKeyManager: '@App\Services\EncryptionKeyManager'
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', method: 'onKernelRequest', priority: 100 }
