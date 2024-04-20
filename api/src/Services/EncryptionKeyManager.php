@@ -8,14 +8,14 @@ namespace App\Services;
  */
 class EncryptionKeyManager
 {
-    private ?string $key = null;
+    private string $key = "";
 
-    public function getKey(): ?string
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    public function setKey(?string $key): void
+    public function setKey(string $key): void
     {
         $this->key = $key;
     }

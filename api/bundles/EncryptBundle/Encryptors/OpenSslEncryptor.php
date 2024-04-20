@@ -27,7 +27,7 @@ class OpenSslEncryptor implements EncryptorInterface
     /**
      * Dynamic salt value.
      */
-    private ?string $salt;
+    private string $salt = "";
 
     private EventDispatcherInterface $dispatcher;
 
@@ -161,12 +161,12 @@ class OpenSslEncryptor implements EncryptorInterface
         return $key;
     }
 
-    public function getSalt(): ?string
+    public function getSalt(): string
     {
         return $this->salt;
     }
 
-    public function setSalt(?string $salt): void
+    public function setSalt(string $salt): void
     {
         $this->salt = $salt;
     }
