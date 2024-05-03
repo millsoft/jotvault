@@ -30,7 +30,7 @@ class Note implements IEncryptedNote
     private ?string $content = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
     private ?User $user = null;
@@ -68,19 +68,19 @@ class Note implements IEncryptedNote
     #[ORM\PreUpdate]
     public function prePersist(): void
     {
-        if($this->createdAt === null) {
-            $this->createdAt = new \DateTimeImmutable();
+        if ($this->created_at === null) {
+            $this->created_at = new \DateTimeImmutable();
         }
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }

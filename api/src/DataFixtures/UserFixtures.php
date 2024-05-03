@@ -11,7 +11,6 @@ class UserFixtures extends Fixture
     {
         for ($i = 0; $i < 5; $i++) {
             $user = new \App\Entity\User();
-            $user->setSessionId('session'.$i);
             $user->setCreatedAt(new \DateTimeImmutable());
             $manager->persist($user);
 

@@ -18,7 +18,7 @@ export default function Page() {
 
     // Handle input changes with TypeScript types for event
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = event.target;
+        const {name, value} = event.target;
         setFormData(prevState => ({
             ...prevState,
             [name]: value
@@ -28,20 +28,29 @@ export default function Page() {
     const submitNote = async (event: React.FormEvent) => {
         event.preventDefault();
 
+
+        const X_SESSION_ID = 'X-Session-Id';
+        const X_ENCRYPTION_KEY = 'X-Session-Id';
+
+        // get the X-Session-Id from the local storage:
+        const sessionId = localStorage.getItem(X_SESSION_ID);
         // Send form data to the server
         const ENDPOINT = 'http://localhost:8000/api/notes';
-        //const ENDPOINT = 'https://de33-95-223-57-208.ngrok-free.app/api/notes';
         const response = await fetch(ENDPOINT, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-Encryption-Key': formData.password
+                'Content-Type': 'application/ld+json',
+                [X_ENCRYPTION_KEY]: formData.password,
+                [X_SESSION_ID]: sessionId
             },
             body: JSON.stringify({
                 title: formData.title,
                 content: formData.content
             })
         });
+
+        // get the X-Session-Id from the response headers
+        localStorage.setItem('X-Session-Id', response.headers.get('X-Session-Id'));
 
     }
 
