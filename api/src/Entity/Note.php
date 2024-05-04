@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Controller\NoteController;
 use App\Repository\NoteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,6 +11,7 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ApiResource]
 class Note implements IEncryptedNote
 {
@@ -29,8 +29,8 @@ class Note implements IEncryptedNote
     #[Encrypted]
     private ?string $content = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
     private ?User $user = null;
@@ -64,14 +64,23 @@ class Note implements IEncryptedNote
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function prePersist(): void
     {
-        return $this->createdAt;
+        if ($this->created_at === null) {
+            $this->created_at = new \DateTimeImmutable();
+        }
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        $this->createdAt = $createdAt;
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }
