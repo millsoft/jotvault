@@ -52,6 +52,10 @@ export default function Page() {
         // get the X-Session-Id from the response headers
         localStorage.setItem('X-Session-Id', response.headers.get('X-Session-Id'));
 
+        //get the ID from the response and redirect to the note page
+        const data = await response.json();
+        window.location.href = `/n/${data.id}`;
+
     }
 
     return (
