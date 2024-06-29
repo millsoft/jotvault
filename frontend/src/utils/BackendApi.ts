@@ -10,6 +10,7 @@ export default class BackendApi {
 
     async fetch(path: string, init?: RequestInit): Promise<Response> {
         const url = this.getEndpointUrl(path);
+        console.log("BACKEND_URL", url);
         return await fetch(url, init);
     }
 

@@ -1,7 +1,8 @@
 "use client"
 import {ChangeEvent, useState} from "react";
+import {saveNote} from "./actions";
 
-interface FormData {
+interface IFormData {
     title: string;
     content: string;
     password: string;
@@ -10,7 +11,7 @@ interface FormData {
 export default function Page() {
 
     // State with TypeScript types
-    const [formData, setFormData] = useState<FormData>({
+    const [formData, setFormData] = useState<IFormData>({
         title: 'New Note',
         content: '',
         password: ''
@@ -27,7 +28,6 @@ export default function Page() {
 
     const submitNote = async (event: React.FormEvent) => {
         event.preventDefault();
-
 
         const X_SESSION_ID = 'X-Session-Id';
         const X_ENCRYPTION_KEY = 'X-Session-Id';
@@ -62,7 +62,7 @@ export default function Page() {
         <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-100">
             <div className="z-10 w-full max-w-5xl flex flex-col items-center justify-between font-mono text-sm">
                 <h1 className="text-4xl font-bold text-gray-800 mb-8">Add New Note</h1>
-                <form className="space-y-4 w-full max-w-md" onSubmit={submitNote}>
+                <form className="space-y-4 w-full max-w-md" action={saveNote}>
                     <div>
                         <label htmlFor="title" className="form-label">Title</label>
                         <input
@@ -70,7 +70,6 @@ export default function Page() {
                             id="title"
                             name="title"
                             value={formData.title}
-                            onChange={handleChange}
                             className="form-input"
                         />
                     </div>

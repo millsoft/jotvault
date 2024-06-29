@@ -5,7 +5,10 @@ const fetchNote = async (id: string): Promise<{
     content: string
 }> => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const url = `${baseUrl}/api/note/${id}`;
+    console.log("URL", url)
     const response = await fetch(`${baseUrl}/api/note/${id}`);
+    //const body = await response.text();console.log(body);
     return await response.json();
 }
 

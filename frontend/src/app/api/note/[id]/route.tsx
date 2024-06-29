@@ -5,6 +5,7 @@ export async function GET(
     {params}: { params: { id: string } }
 ) {
 
+    console.log("COOL_HERE");
     const res = await new BackendApi().fetch(`/api/notes/${params.id}`, {
         next: {revalidate: 10}
     });
